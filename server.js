@@ -6,6 +6,10 @@ app.get('/', (req, res) => {
   res.status(200).json({ message: 'Doccords' })
 })
 
+app.get('/doccords', (req, res) => {
+  res.status(200).json({ message: 'Second' })
+})
+
 const PORT = 8000
 
 app.listen(PORT, () => {
