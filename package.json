@@ -4,7 +4,7 @@
   "description": "api for doccords app",
   "main": "server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "lint": "eslint ./",
     "lint-fix": "eslint ./ --fix",
     "format": "prettier --config .prettierrc.json --write \"**/*.{js,json,md}\"",
