@@ -3,7 +3,7 @@ const app = express()
 
 // Routes
 app.get('/', (req, res) => {
-  res.status(200).json({ message: 'Doccords'     })
+  res.status(200).json({ message: 'Doccords' })
 })
 
 const PORT = 8000
