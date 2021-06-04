@@ -40,7 +40,8 @@
   "lint-staged": {
     "src/**/*.{js,json}": [
       "prettier --write",
-      "eslint --cache --fix"
+      "eslint --cache --fix",
+      "git add"
     ]
   }
 }
