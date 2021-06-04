@@ -30,4 +30,6 @@ workflows:
   #             # only: master  # Uncomment this line
   heroku_deploy:
     jobs:
+      - node/install-packages
+
       - heroku/deploy-via-git
