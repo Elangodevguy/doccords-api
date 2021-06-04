@@ -10,8 +10,6 @@ app.get('/doccords', (req, res) => {
   res.status(200).json({ message: 'Second' })
 })
 
-const PORT = 8000
-
-app.listen(PORT, () => {
-  console.log(`Server is listening on Port:${PORT}`)
+app.listen(process.env.PORT, () => {
+  console.log(`Server is listening on Port:${process.env.PORT}`)
 })
