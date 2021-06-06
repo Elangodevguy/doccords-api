@@ -10,7 +10,7 @@ orbs:
   # NOTE: Environment variables containing the necessary secrets can be setup in the CircleCI UI
   # See here https://circleci.com/docs/2.0/env-vars/#setting-an-environment-variable-in-a-project
   heroku: circleci/heroku@1.2
-  slack: circleci/slack@4.1
+  slack-notify-success-fail-with-data: heroku/slack-notify-success-fail-with-data@1.0.1
 
 workflows:
   # Below is the definition of your workflow.
@@ -29,7 +29,4 @@ workflows:
               # This sample config runs this job on any branch matching the regex below, however, it's more likely you want to only run this job on master.
               # only: /.*-heroku-deploy/ # Delete this line
               only: develop # Uncomment this line
-      - slack/notify:
-        event: Options: ["pass"]
-      - slack/notify:
-        event: Options: ["fail"]
+      - slack-notify-success-fail-with-data:
