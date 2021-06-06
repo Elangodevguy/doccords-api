@@ -29,9 +29,9 @@ workflows:
               # This sample config runs this job on any branch matching the regex below, however, it's more likely you want to only run this job on master.
               # only: /.*-heroku-deploy/ # Delete this line
               only: develop # Uncomment this line
-        - slack/notify:
-          event: fail
-          template: basic_fail_1
-        - slack/notify:
-          event: pass
-          template: success_tagged_deploy_1
+      - slack/notify:
+        event: fail
+        template: basic_fail_1
+      - slack/notify:
+        event: pass
+        template: success_tagged_deploy_1
