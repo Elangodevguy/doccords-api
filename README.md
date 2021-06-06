@@ -53,3 +53,12 @@ To make our coding practices standard with all our team members, we are using `P
 
 ### Pre-commit hook
 In this project we are using huskey and lint-staged to hook particular scripts to pre commit hook, whenever we do git commit -m 'message' huskey and lint-staged will call the pre-commit hook, from the hook we will call our scripts in the order of npm run lint, npm run lint-fix, npm run format if anyone of this script gets failed our commit will not happen, so this will give standard structure to our code base.
+
+## Deployment
+We have integrated `Circle CI\CD` tool to keep our deployment seamless,
+
+Whenever we `push` something in any of our branch `Circle CI\CD` will get called and `Circle CI\CD` will run the `ESLint` and `Prettier` scripts if any of the script got failed it will notify all the users in the repo.
+
+but when we `push` something to develop branch it will go one step further and `Circle CI\CD` will call heroku-git hook and our project current `develop` branch will get deploy automatically in `Heroku`
+
+# [api link](https://doccords-api.herokuapp.com/)
