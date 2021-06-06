@@ -30,6 +30,6 @@ workflows:
               # only: /.*-heroku-deploy/ # Delete this line
               only: develop # Uncomment this line
       - slack/notify:
-        event: 'fail'
+        event: Options: "pass"
       - slack/notify:
-        event: 'pass'
+        event: Options: "fail"
