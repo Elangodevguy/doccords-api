@@ -30,4 +30,4 @@ workflows:
               # only: /.*-heroku-deploy/ # Delete this line
               only: develop # Uncomment this line
       - slack-notify-success-fail-with-data:
-          title: 'wooow'
+          title: 'wooowww'
