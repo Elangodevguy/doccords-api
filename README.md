@@ -57,7 +57,7 @@ In this project we are using huskey and lint-staged to hook particular scripts t
 ## Deployment
 We have integrated `Circle CI\CD` tool to keep our deployment seamless,
 
-Whenever we `push` something in any of our branch `Circle CI\CD` will get called and `Circle CI\CD` will run the `ESLint` and `Prettier` scripts if any of the script got failed it will notify all the users in the repo.
+Whenever we `push` something in any of our branch `Circle CI\CD` will get called and `Circle CI\CD` will run the `ESLint` and `Prettier` scripts if any of the script gets failed it will notify all the users in the repo.
 
 but when we `push` something to develop branch it will go one step further and `Circle CI\CD` will call heroku-git hook and our project current `develop` branch will get deploy automatically in `Heroku`
 
