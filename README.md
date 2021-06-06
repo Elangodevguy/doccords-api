@@ -22,16 +22,16 @@ In this section we will tell you step by step process, that will tell you how to
 
 Clone this project repository using
 
-# `git clone https://github.com/Elangodevguy/doccords-api.git`
+### `git clone https://github.com/Elangodevguy/doccords-api.git`
 after you clone doccords-api repo, move to the root of the project directory in your terminal
 
 Install both dependency and dev-dependency using
-# `npm install or npm i`
+### `npm install or npm i`
 
 Setting up local .env to setup local .env, copy .env file from develop branch.
 
 Run the app in development mode by 
-# `npm start`
+### `npm start`
 
 Open http://localhost:8000 on any tool like `Postman`.
 
@@ -39,17 +39,17 @@ Open http://localhost:8000 on any tool like `Postman`.
 
 ### Linting
 To lint our entire project, we can run
-# `npm run lint`
+### `npm run lint`
 
 we don't need to run the above commoand for every change in our file, VS code will automatically tell the places where ESLint rules are getting broke, thanks to `.eslintrc.js` which conatins all the standard rules for our project.
 
 ### Linting --fix
 Most of our obovious `ESLint` errors will be fix by running the below command.
-# `npm run lint-fix`
+### `npm run lint-fix`
 
 ### Pretty code
 To make our coding practices standard with all our team members, we are using `Prettier`
-# `npm run format`
+### `npm run format`
 
 ### Pre-commit hook
 In this project we are using huskey and lint-staged to hook particular scripts to pre commit hook, whenever we do git commit -m 'message' huskey and lint-staged will call the pre-commit hook, from the hook we will call our scripts in the order of npm run lint, npm run lint-fix, npm run format if anyone of this script gets failed our commit will not happen, so this will give standard structure to our code base.
