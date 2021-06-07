@@ -8,11 +8,12 @@ orbs:
 workflows:
   sample:
     jobs:
-      - node/test
-      - heroku/deploy-via-git:
-          requires:
-            - node/test # only run deploy-via-git job if the build job has completed
-          filters:
-            branches:
-              only: develop # Uncomment this line
+      steps:
+        - node/test
+        - heroku/deploy-via-git:
+            requires:
+              - node/test # only run deploy-via-git job if the build job has completed
+            filters:
+              branches:
+                only: develop # Uncomment this line
 
