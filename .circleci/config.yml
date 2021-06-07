@@ -18,35 +18,7 @@ workflows:
           post-steps:
             - slack/notify:
                 event: pass
-                custom: |
-                  {
-                    "blocks": [
-                      {
-                        "type": "section",
-                        "fields": [
-                          {
-                            "type": "plain_text",
-                            "text": "*This is a text notification*",
-                            "emoji": true
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                template: basic_success_1
             - slack/notify:
                 event: fail
-                custom: |
-                  {
-                    "blocks": [
-                      {
-                        "type": "section",
-                        "fields": [
-                          {
-                            "type": "plain_text",
-                            "text": "*This is a text notification*",
-                            "emoji": true
-                          }
-                        ]
-                      }
-                    ]
-                  }
+                template: basic_fail_1
