@@ -15,9 +15,4 @@ workflows:
           filters:
             branches:
               only: develop # Uncomment this line
-      - slack/notify:
-        event: always
-        template: basic_fail_1
-      - slack/notify:
-        event: always
-        template: basic_success_1
+
