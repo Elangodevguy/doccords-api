@@ -17,6 +17,8 @@ workflows:
               only: develop # Uncomment this line
           post-steps:
             - slack/notify:
-              event: fail
+                event: fail
+                template: basic_fail_1
             - slack/notify:
-              event: pass
+                event: pass
+                template: basic_success_1
