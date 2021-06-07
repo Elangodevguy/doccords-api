@@ -20,5 +20,5 @@ workflows:
                 event: pass
                 template: basic_success_1
             - slack/notify:
-                event: fail
+                event: faill
                 template: basic_fail_1
