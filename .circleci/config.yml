@@ -18,7 +18,29 @@ workflows:
           post-steps:
             - slack/notify:
                 event: pass
-                template: basic_success_1
+                custom: |
+                  {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "text": {
+                          "type": "mrkdwn",
+                          "text": "Hello, Assistant to the Regional Manager Dwight! *Michael Scott* wants to know where you'd like to take the Paper Company investors to dinner tonight.\n\n *Please select a restaurant:*"
+                        }
+                      }
+                    ]
+                  }
             - slack/notify:
                 event: fail
-                template: basic_fail_1
+                custom: |
+                {
+                  "blocks": [
+                    {
+                      "type": "section",
+                      "text": {
+                        "type": "mrkdwn",
+                        "text": "Hello, Assistant to the Regional Manager Dwight! *Michael Scott* wants to know where you'd like to take the Paper Company investors to dinner tonight.\n\n *Please select a fail:*"
+                      }
+                    }
+                  ]
+                }
