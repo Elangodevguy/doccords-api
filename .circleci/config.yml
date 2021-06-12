@@ -18,7 +18,7 @@ workflows:
           post-steps:
             - slack/notify:
                 event: pass
-                template: basic_success_1
+                template: success_tagged_deploy_1
                 # custom: |
                 #   {
                 #     "blocks": [
