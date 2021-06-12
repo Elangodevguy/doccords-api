@@ -23,24 +23,30 @@ workflows:
                     "blocks": [
                       {
                         "type": "section",
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "Hello, Assistant to the Regional Manager Dwight! *Michael Scott* wants to know where you'd like to take the Paper Company investors to dinner tonight.\n\n *Please select a restaurant:*"
-                        }
+                        "fields": [
+                          {
+                            "type": "plain_text",
+                            "text": "*This is a text notification*",
+                            "emoji": true
+                          }
+                        ]
                       }
                     ]
                   }
             - slack/notify:
                 event: fail
                 custom: |
-                {
-                  "blocks": [
-                    {
-                      "type": "section",
-                      "text": {
-                        "type": "mrkdwn",
-                        "text": "Hello, Assistant to the Regional Manager Dwight! *Michael Scott* wants to know where you'd like to take the Paper Company investors to dinner tonight.\n\n *Please select a fail:*"
+                  {
+                    "blocks": [
+                      {
+                        "type": "section",
+                        "fields": [
+                          {
+                            "type": "plain_text",
+                            "text": "*This is a text notification*",
+                            "emoji": true
+                          }
+                        ]
                       }
-                    }
-                  ]
-                }
+                    ]
+                  }
