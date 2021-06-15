@@ -14,26 +14,11 @@ workflows:
             - node/test # only run deploy-via-git job if the build job has completed
           filters:
             branches:
-              only: develop # Uncomment this line
+              only: master # Uncomment this line
           post-steps:
             - slack/notify:
                 event: pass
                 template: success_tagged_deploy_1
-                # custom: |
-                #   {
-                #     "blocks": [
-                #       {
-                #         "type": "section",
-                #         "fields": [
-                #           {
-                #             "type": "plain_text",
-                #             "text": "*This is a pass notification*",
-                #             "emoji": true
-                #           }
-                #         ]
-                #       }
-                #     ]
-                #   }
             - slack/notify:
                 event: fail
                 template: basic_fail_1
