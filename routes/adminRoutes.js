@@ -12,6 +12,7 @@ router
   .delete(adminController.deleteHealthTopic)
   .put(adminController.updateHealthTopic)
 router.route('/articles').get(adminController.getAllArticles).post(adminController.createArticle)
+router.route('/topHealthTopics').get(adminController.getTopHealthTopics)
 
 router
   .route('/articles/:articleId')
@@ -20,4 +21,7 @@ router
   .delete(adminController.deleteArticle)
 
 router.route('/upload/image').post(uploader.single('image'), imageUploader)
+router.route('/dashboard').get(adminController.getCompleteDetails)
+router.route('/dashboard/documents').get(adminController.getDocumentsDetial)
+router.route('/suggestedTopics').get(adminController.getSuggestedTopics).put(adminController.declineHealthTopic)
 module.exports = router

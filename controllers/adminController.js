@@ -1,4 +1,5 @@
 const { db } = require('../util/admin')
+const { sendNotificationToClient } = require('../util/notify')
 
 exports.createHealthTopic = (req, res) => {
   if (req.body.title.trim() === '' || req.body.picture.trim() === '') {
@@ -15,6 +16,30 @@ exports.createHealthTopic = (req, res) => {
     .then((doc) => {
       const resHealthTopic = newHealthTopic
       resHealthTopic.healthTopicId = doc.id
+      if (req.body.documentId) {
+        db.doc(`/documents/${req.body.documentId}`)
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              db.doc(`/suggestedTopics/${req.body.suggestedTopicId}`)
+                .get()
+                .then((doc) => {
+                  if (!doc.exists) {
+                    return res.status(404).json({ error: 'suggestion not found' })
+                  }
+                  doc.ref.update({ status: 'approved' })
+                })
+              db.doc(`/users/${doc.data().userId}`)
+                .get()
+                .then((document) => {
+                  sendNotificationToClient(document.data().notificationTokens, {
+                    title: 'Suggested topic got added',
+                    body: `Admin added ${req.body.title} you can use it in your document`
+                  })
+                })
+            }
+          })
+      }
       res.json({ data: resHealthTopic, success: true })
     })
     .catch((err) => {
@@ -193,5 +218,173 @@ exports.updateArticle = (req, res) => {
     .catch((err) => {
       console.log(err)
       res.status(500).json({ error: 'Something went wrong' })
+    })
+}
+
+exports.getTopHealthTopics = (req, res) => {
+  db.collection('documents')
+    .get()
+    .then((data) => {
+      const topHealthTopics = {}
+      data.forEach((doc) => {
+        if (topHealthTopics[doc.data().healthTopicId]) {
+          topHealthTopics[doc.data().healthTopicId] = topHealthTopics[doc.data().healthTopicId] + 1
+        } else {
+          topHealthTopics[doc.data().healthTopicId] = 1
+        }
+      })
+      return res.json(topHealthTopics)
+    })
+    .catch((err) => {
+      console.error(err)
+      res.status(500).json({ error: err.code })
+    })
+}
+
+exports.getCompleteDetails = (req, res) => {
+  let usersCount = 0
+  let profilesCount = 0
+  let sharesCount = 0
+  let documentsCount = 0
+  db.collection('users')
+    .get()
+    .then((data) => {
+      usersCount = data.size
+      return new Promise((resolve, reject) => {
+        resolve(usersCount)
+      })
+    })
+    .then(() => {
+      db.collection('profiles')
+        .get()
+        .then((data) => {
+          profilesCount = data.size
+          return new Promise((resolve, reject) => {
+            resolve(profilesCount)
+          })
+        })
+    })
+    .then(() => {
+      db.collection('documents')
+        .get()
+        .then((data) => {
+          documentsCount = data.size
+          return new Promise((resolve, reject) => {
+            resolve(documentsCount)
+          })
+        })
+    })
+    .then(() => {
+      db.collection('shares')
+        .get()
+        .then((data) => {
+          sharesCount = data.size
+          res.status(200).json({
+            data: {
+              sharesCount,
+              documentsCount,
+              profilesCount,
+              usersCount
+            },
+            success: true
+          })
+        })
+    })
+    .catch((err) => {
+      console.error(err)
+      res.status(500).json({ error: err.code })
+    })
+}
+exports.getDocumentsDetial = (req, res) => {
+  const template = [
+    { uploadedCount: 0, sharedCount: 0, name: 'January' },
+    { uploadedCount: 0, sharedCount: 0, name: 'February' },
+    { uploadedCount: 0, sharedCount: 0, name: 'March' },
+    { uploadedCount: 0, sharedCount: 0, name: 'April' },
+    { uploadedCount: 0, sharedCount: 0, name: 'May' },
+    { uploadedCount: 0, sharedCount: 0, name: 'June' },
+    { uploadedCount: 0, sharedCount: 0, name: 'July' },
+    { uploadedCount: 0, sharedCount: 0, name: 'August' },
+    { uploadedCount: 0, sharedCount: 0, name: 'September' },
+    { uploadedCount: 0, sharedCount: 0, name: 'October' },
+    { uploadedCount: 0, sharedCount: 0, name: 'November' },
+    { uploadedCount: 0, sharedCount: 0, name: 'December' }
+  ]
+  // const documentsUploaded = JSON.parse(JSON.stringify(template))
+  // const documentsShared = JSON.parse(JSON.stringify(template))
+  // console.log(documentsUploaded)
+  db.collection('documents')
+    .get()
+    .then((data) => {
+      data.forEach((doc) => {
+        template[doc.createTime.toDate().getMonth()].uploadedCount += 1
+      })
+
+      return new Promise((resolve, reject) => {
+        resolve(template)
+      })
+    })
+    .then(() => {
+      db.collection('shares')
+        .get()
+        .then((data) => {
+          data.forEach((doc) => {
+            template[doc.createTime.toDate().getMonth()].sharedCount += 1
+          })
+          res.status(200).json({ data: { template }, success: true })
+        })
+    })
+    .catch((err) => {
+      console.error(err)
+      res.status(500).json({ error: err.code })
+    })
+}
+
+exports.getSuggestedTopics = (req, res) => {
+  const suggestedTopics = []
+  db.collection('suggestedTopics')
+    .get()
+    .then((data) => {
+      data.forEach((doc) => {
+        suggestedTopics.push({
+          suggestedTopicId: doc.id,
+          ...doc.data()
+        })
+      })
+      res.status(200).json({ data: suggestedTopics, success: true })
+    })
+    .catch((err) => {
+      console.error(err)
+      res.status(500).json({ error: err.code })
+    })
+}
+exports.declineHealthTopic = (req, res) => {
+  const { suggestedTopicId, documentId } = req.body
+  db.doc(`/suggestedTopics/${suggestedTopicId}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return res.status(404).json({ error: 'suggestion not found' })
+      }
+      return doc.ref.update({ status: 'declined' })
+    })
+    .then(() => {
+      db.doc(`/documents/${documentId}`)
+        .get()
+        .then((doc) => {
+          db.doc(`/users/${doc.data().userId}`)
+            .get()
+            .then((document) => {
+              sendNotificationToClient(document.data().notificationTokens, {
+                title: 'Suggested topic got declined',
+                body: 'Admin declined your suggestion'
+              })
+            })
+        })
+      res.status(200).json({ success: true })
+    })
+    .catch((err) => {
+      console.error(err)
+      res.status(500).json({ error: err.code })
     })
 }
