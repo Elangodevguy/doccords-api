@@ -297,27 +297,27 @@ exports.shareDocuments = (req, res) => {
           .then((doc) => {
             if (doc.exists) {
               name = doc.data().profileName
+              emailTemplate
+                .send({
+                  template: 'share',
+                  message: {
+                    to: email
+                  },
+                  locals: {
+                    name,
+                    count: documentsList.length,
+                    id: doc.id
+                  }
+                })
+                .then(() => {
+                  console.log('success email')
+                  return res.status(200).json({ success: true })
+                })
+                .catch('Error email', console.error)
             } else {
               res.status(404).json({ user: 'usr not found' })
             }
           })
-        emailTemplate
-          .send({
-            template: 'share',
-            message: {
-              to: email
-            },
-            locals: {
-              name,
-              count: documentsList.length,
-              id: doc.id
-            }
-          })
-          .then(() => {
-            console.log('success email')
-            return res.status(200).json({ success: true })
-          })
-          .catch('Error email', console.error)
         // return res.status(200).json({ success: true })
       })
   }
