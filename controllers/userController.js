@@ -19,7 +19,7 @@ const { sendNotificationToClient } = require('../util/notify')
 const transporter = nodemailer.createTransport({
   host: 'smtp.gmail.com',
   port: 465,
-  secure: false,
+  secure: true,
   requireTLS: true,
   auth: {
     user: 'doccords@gmail.com',
