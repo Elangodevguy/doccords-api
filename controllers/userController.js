@@ -282,6 +282,7 @@ exports.shareDocuments = (req, res) => {
       .add({ documentsList })
       .then((doc) => {
         let name = 'ela'
+        const shareId = doc.id
         // const mailOptions = {
         //   from: 'doccords@gmail.com',
         //   to: email,
@@ -309,7 +310,7 @@ exports.shareDocuments = (req, res) => {
                   locals: {
                     name,
                     count: documentsList.length,
-                    id: doc.id
+                    id: shareId
                   }
                 })
                 .then(() => {
