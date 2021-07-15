@@ -24,6 +24,9 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: 'doccords@gmail.com',
     pass: '123456789qwe$$'
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 })
 
