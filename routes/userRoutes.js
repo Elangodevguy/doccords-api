@@ -26,7 +26,6 @@ router
 
 router.route('/documents/access').put(userController.updateAccess)
 router.route('/documents/share').post(userController.shareDocuments)
-router.route('/documents/share/:shareId').get(userController.getSharedDocs)
 
 router.route('/upload/file').post(uploader.single('image'), imageUploader)
 module.exports = router

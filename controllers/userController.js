@@ -5,30 +5,30 @@ const noImg = 'no-img.png'
 const nodemailer = require('nodemailer')
 const Email = require('email-templates')
 const { sendNotificationToClient } = require('../util/notify')
-// const transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     type: 'OAuth2',
-//     user: process.env.MAIL_USERNAME,
-//     pass: process.env.MAIL_PASSWORD,
-//     clientId: process.env.OAUTH_CLIENTID,
-//     clientSecret: process.env.OAUTH_CLIENT_SECRET,
-//     refreshToken: process.env.OAUTH_REFRESH_TOKEN
-//   }
-// })
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 465,
-  secure: true,
-  requireTLS: true,
+  service: 'gmail',
   auth: {
-    user: 'doccords@gmail.com',
-    pass: '123456789qwe$$'
-  },
-  tls: {
-    rejectUnauthorized: false
+    type: 'OAuth2',
+    user: process.env.MAIL_USERNAME,
+    pass: process.env.MAIL_PASSWORD,
+    clientId: process.env.OAUTH_CLIENTID,
+    clientSecret: process.env.OAUTH_CLIENT_SECRET,
+    refreshToken: process.env.OAUTH_REFRESH_TOKEN
   }
 })
+// const transporter = nodemailer.createTransport({
+//   host: 'smtp.gmail.com',
+//   port: 465,
+//   secure: true,
+//   requireTLS: true,
+//   auth: {
+//     user: 'doccords@gmail.com',
+//     pass: '123456789qwe$$'
+//   },
+//   tls: {
+//     rejectUnauthorized: false
+//   }
+// })
 
 const emailTemplate = new Email({
   views: { root: './emails', options: { extension: 'ejs' } },
@@ -251,7 +251,6 @@ exports.createDocument = (req, res) => {
 exports.deleteProfilesAndDocs = (req, res) => {
   const profileList = req.body.profiles
   const docList = req.body.documents
-  console.log(req.body)
   if (profileList.length > 0) {
     profileList.forEach((element) => {
       db.collection('profiles').doc(element).delete()
@@ -283,19 +282,7 @@ exports.shareDocuments = (req, res) => {
       .then((doc) => {
         let name = 'ela'
         const shareId = doc.id
-        // const mailOptions = {
-        //   from: 'doccords@gmail.com',
-        //   to: email,
-        //   subject: 'This mail is from doccords',
-        //   text: `Hi from your nodemailer project ${doc.id}`
-        // }
-        // transporter.sendMail(mailOptions, function (err, data) {
-        //   if (err) {
-        //     console.log('Error ' + err)
-        //   } else {
-        //     console.log('Email sent successfully')
-        //   }
-        // })
+
         db.doc(`/users/${req.user.decodedToken.uid}`)
           .get()
           .then((doc) => {
@@ -310,11 +297,11 @@ exports.shareDocuments = (req, res) => {
                   locals: {
                     name,
                     count: documentsList.length,
-                    id: shareId
+                    id: shareId,
+                    email
                   }
                 })
                 .then(() => {
-                  console.log('success email')
                   return res.status(200).json({ success: true })
                 })
                 .catch('Error email', console.error)
@@ -352,7 +339,6 @@ exports.getTopHealthTopicsByUser = (req, res) => {
 }
 exports.updateAccess = (req, res) => {
   const { documentId, sharedList } = req.body
-  console.log(documentId, sharedList)
   db.doc(`/documents/${documentId}`)
     .get()
     .then((doc) => {
@@ -372,7 +358,6 @@ exports.updateAccess = (req, res) => {
 
 exports.deleteDocuments = (req, res) => {
   const docList = req.body.documentIds
-  console.log(req.body)
 
   if (docList.length > 0) {
     docList.forEach((element) => {
@@ -382,39 +367,12 @@ exports.deleteDocuments = (req, res) => {
   }
 }
 
-exports.getSharedDocs = (req, res) => {
-  const id = req.params.shareId
-  console.log(id)
-  db.doc(`/shares/${id}`)
-    .get()
-    .then((doc) => {
-      console.log(doc.data())
-      const documentsList = doc.data().documentsList
-      const sharedList = []
-      db.collection('/documents')
-        .get()
-        .then((data) => {
-          data.forEach((doc) => {
-            if (documentsList.includes(doc.id)) {
-              sharedList.push({ documentId: doc.id, ...doc.data() })
-            }
-          })
-          return res.status(200).json({ documents: sharedList, success: true })
-        })
-        .catch((err) => {
-          res.status(500).json({ error: 'something went wrong' })
-          console.error(err)
-        })
-    })
-}
-
 exports.notifyClient = (req, res) => {
   db.doc(`/users/${req.user.decodedToken.uid}`)
     .get()
     .then((doc) => {
       const notificationTokens = doc.data().notificationTokens || []
       if (doc.exists && notificationTokens.length > 0) {
-        console.log('is it calling twice')
         sendNotificationToClient(notificationTokens, {
           title: 'Suggested topic',
           body: 'your suggestion got added please update your document'
