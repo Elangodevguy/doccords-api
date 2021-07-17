@@ -47,8 +47,8 @@ exports.getAllHealthTopics = (req, res) => {
 }
 
 exports.getSharedDocs = (req, res) => {
-  const id = req.params.shareId
-  const email = req.params.shareEmail
+  const id = req.body.shareId
+  const email = req.body.shareEmail
   let filteredList = []
   console.log(id)
   db.doc(`/shares/${id}`)
