@@ -16,19 +16,6 @@ const transporter = nodemailer.createTransport({
     refreshToken: process.env.OAUTH_REFRESH_TOKEN
   }
 })
-// const transporter = nodemailer.createTransport({
-//   host: 'smtp.gmail.com',
-//   port: 465,
-//   secure: true,
-//   requireTLS: true,
-//   auth: {
-//     user: 'doccords@gmail.com',
-//     pass: '123456789qwe$$'
-//   },
-//   tls: {
-//     rejectUnauthorized: false
-//   }
-// })
 
 const emailTemplate = new Email({
   views: { root: './emails', options: { extension: 'ejs' } },
@@ -70,9 +57,6 @@ exports.createUser = (req, res) => {
       }
     })
     .then(() => {
-      // const { profileName, profilePic, profileType } = newUser
-      // console.log(doc.data())
-      // return res.status(201).json({ profileName, profilePic, profileType })
       return db.doc(`/users/${req.user.decodedToken.uid}`).get()
     })
     .then((doc) => {
@@ -136,17 +120,6 @@ exports.createProfile = (req, res) => {
     .then((doc) => {
       const resProfile = newProfileData
       resProfile.profileId = doc.id
-      // if (req.body.document.link) {
-      //   const newDocumentData = {
-      //     name: req.body.document.name,
-      //     link: req.body.document.link,
-      //     healthTopicId: req.body.document.healthTopicId,
-      //     userId: req.user.decodedToken.uid,
-      //     profileId: doc.id,
-      //     sharedList: []
-      //   }
-      //   db.collection('/documents').add(newDocumentData)
-      // }
       res.status(201).json({ data: resProfile, success: true })
     })
     .catch((err) => {
